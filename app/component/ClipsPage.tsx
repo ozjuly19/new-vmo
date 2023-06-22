@@ -1,48 +1,42 @@
 "use client"
 
-import React from "react";
-import Clips from "./Clips";
+import { useState, useEffect } from 'react';
 
-function ClipsPage() {
-    return (
-        <table className="table-auto w-full">
-            <tbody className="bg-white dark:bg-slate-800">
-                <tr>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                        {"Sanders County Sheriff's Office"}
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                        6/20/23
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                        7:22 AM
-                    </td>
-                </tr>
-                <tr>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                        {"Sanders County Sheriff's Office"}
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                        6/19/23
-                    </td>
-                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                        4:20 AM
-                    </td>
-                </tr>
-                <tr>
-                    <td className="border-b border-slate-200 dark:border-slate-600 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                        {"Sanders County Sheriff's Office"}
-                    </td>
-                    <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
-                        6/18/23
-                    </td>
-                    <td className="border-b border-slate-200 dark:border-slate-600 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                        2:32 AM
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    )
+interface Clip {
+    id: number;     // The DB side id for that row
+    source: string; // The source of the clip i.e. "Sanders County Sheriff's Office"
+    date: string;   // Returns ISO format date YYYY-MM-DD
+    time: string;   // Time the clip was uploaded
 }
 
-export default ClipsPage;
+function ClipsPage() {
+    const [clips, setClips] = useState<Clip[]>([]);
+
+    useEffect(() => {
+        // Fetch clips from the database and update the state
+        fetch('/api/clips')
+            .then(response => response.json())
+            .then(data => setClips(data));
+    }, []);
+
+    return (
+        <table className="table-auto w-full">
+            <thead>
+                <tr>
+                    <th className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">Source</th>
+                    <th className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">Date</th>
+                    <th className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">Time</th>
+                </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-slate-800">
+                {clips.map(clip => (
+                    <tr key={clip.id}>
+                        <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{clip.source}</td>
+                        <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">{clip.date}</td>
+                        <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">{clip.time}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+}
