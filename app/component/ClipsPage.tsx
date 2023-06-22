@@ -16,18 +16,19 @@ function ClipsPage() {
         // Fetch clips from the database and update the state
         fetch('/api/clips')
             .then(response => response.json())
-            .then(data => setClips(data));
+            .then(data => {
+                const clips: Clip[] = data["clipsJson"].map((clip: any) => ({
+                    id: clip.id,
+                    source: clip.source,
+                    date: new Date(clip.date).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' }),
+                    time: clip.time
+                }));
+                setClips(clips);
+            });
     }, []);
 
     return (
         <table className="table-auto w-full">
-            <thead>
-                <tr>
-                    <th className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">Source</th>
-                    <th className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">Date</th>
-                    <th className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">Time</th>
-                </tr>
-            </thead>
             <tbody className="bg-white dark:bg-slate-800">
                 {clips.map(clip => (
                     <tr key={clip.id}>
@@ -40,3 +41,5 @@ function ClipsPage() {
         </table>
     );
 }
+
+export default ClipsPage;
