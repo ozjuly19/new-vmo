@@ -1,10 +1,7 @@
 {
-    "recommendations": [
-        "github.copilot-chat",
-        "dbaeumer.vscode-eslint",
-        "zignd.html-css-class-completion",
-        "ms-vscode.vscode-typescript-next",
-        "christian-kohler.path-intellisense",
-        "jasonnutter.search-node-modules"
-    ]
+  "recommendations": [
+    "github.copilot-chat",
+    "ms-vscode.vscode-typescript-next",
+    "github.copilot-nightly"
+  ]
 }

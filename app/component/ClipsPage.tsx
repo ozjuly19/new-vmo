@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import LoadingScreen from "./LoadingScreen";
 
 interface Clip {
     id: number;     // The DB side id for that row
@@ -11,6 +12,7 @@ interface Clip {
 
 function ClipsPage() {
     const [clips, setClips] = useState<Clip[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         // Fetch clips from the database and update the state
@@ -24,8 +26,13 @@ function ClipsPage() {
                     time: clip.time
                 }));
                 setClips(clips);
+                setIsLoading(false);
             });
     }, []);
+
+    if (isLoading) {
+        return <LoadingScreen loadingText="Loading clips..." />;
+    }
 
     return (
         <table className="table-auto w-full">
