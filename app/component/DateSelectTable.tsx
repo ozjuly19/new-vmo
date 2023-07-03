@@ -39,6 +39,9 @@ function DateSelectTable() {
                 }));
                 setDates(dates);
                 setIsLoading(false);
+
+                // Fix pagination by adding at least 
+                setCurrentItems(dates.slice(0, 1));
             });
     }, []);
 

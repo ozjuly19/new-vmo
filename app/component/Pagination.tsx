@@ -1,15 +1,14 @@
 "use client"
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 interface PaginationProps {
     setCurrentItems: React.Dispatch<React.SetStateAction<any[]>>;
     items: any[];
     tableRowRef: React.RefObject<HTMLTableRowElement>;
-    tableRef: React.RefObject<HTMLTableElement>;
 }
 
-function Pagination({ items, setCurrentItems, tableRef, tableRowRef }: PaginationProps) {
+function Pagination({ items, setCurrentItems, tableRowRef }: PaginationProps) {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(1);
 
@@ -17,7 +16,6 @@ function Pagination({ items, setCurrentItems, tableRef, tableRowRef }: Paginatio
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
     useEffect(() => {
-        const table = tableRef.current;
         const tableRow = tableRowRef.current;
 
         if (tableRow) {

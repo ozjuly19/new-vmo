@@ -16,7 +16,6 @@ function ClipsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [currentItems, setCurrentItems] = useState<any[]>([]);
 
-    const tableRef = useRef<HTMLTableRowElement>(null);
     const tableRowRef = useRef<HTMLTableRowElement>(null);
 
     useEffect(() => {
@@ -32,6 +31,9 @@ function ClipsPage() {
                 }));
                 setClips(clips);
                 setIsLoading(false);
+
+                // Fix pagination by adding at least 1 item to allow pagination calculations
+                setCurrentItems(clips.slice(0, 1));
             });
     }, []);
 
@@ -40,7 +42,7 @@ function ClipsPage() {
     } else {
         return (
             <div>
-                <table ref={tableRef} className="table-auto w-full">
+                <table className="table-auto w-full">
                     <tbody className="bg-white dark:bg-slate-800">
                         {currentItems.map((clip) => (
                             <tr ref={tableRowRef} key={clip.id}>
@@ -51,7 +53,7 @@ function ClipsPage() {
                         ))}
                     </tbody>
                 </table>
-                <Pagination items={clips} tabelRef={tableRef} tableRowRef={tableRowRef} setCurrentItems={setCurrentItems} />
+                <Pagination items={clips} tableRowRef={tableRowRef} setCurrentItems={setCurrentItems} />
             </div>
         );
     }
