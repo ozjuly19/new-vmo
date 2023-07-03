@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import LoadingScreen from "./LoadingScreen";
+import Pagination from "./Pagination";
 
 interface Clip {
     id: number;     // The DB side id for that row
@@ -13,6 +14,10 @@ interface Clip {
 function ClipsPage() {
     const [clips, setClips] = useState<Clip[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [currentItems, setCurrentItems] = useState<any[]>([]);
+
+    const tableRef = useRef<HTMLTableRowElement>(null);
+    const tableRowRef = useRef<HTMLTableRowElement>(null);
 
     useEffect(() => {
         // Fetch clips from the database and update the state
@@ -32,21 +37,24 @@ function ClipsPage() {
 
     if (isLoading) {
         return <LoadingScreen loadingText="Loading clips..." />;
+    } else {
+        return (
+            <div>
+                <table ref={tableRef} className="table-auto w-full">
+                    <tbody className="bg-white dark:bg-slate-800">
+                        {currentItems.map((clip) => (
+                            <tr ref={tableRowRef} key={clip.id}>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{clip.source}</td>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">{clip.date}</td>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">{clip.time}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <Pagination items={clips} tabelRef={tableRef} tableRowRef={tableRowRef} setCurrentItems={setCurrentItems} />
+            </div>
+        );
     }
-
-    return (
-        <table className="table-auto w-full">
-            <tbody className="bg-white dark:bg-slate-800">
-                {clips.map(clip => (
-                    <tr key={clip.id}>
-                        <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{clip.source}</td>
-                        <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">{clip.date}</td>
-                        <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">{clip.time}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    );
 }
 
 export default ClipsPage;

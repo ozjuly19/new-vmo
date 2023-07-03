@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import LoadingScreen from "./LoadingScreen";
+import Pagination from "./Pagination";
 
 interface Date {
     id: number; // The DB side id for that row
@@ -16,8 +17,9 @@ interface Date {
 function DateSelectTable() {
     const [dates, setDates] = useState<Date[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [currentItems, setCurrentItems] = useState<any[]>([]);
+
+    const tableRowRef = useRef<HTMLTableRowElement>(null);
 
     useEffect(() => {
         // Fetch dates from the database and update the state
@@ -40,80 +42,40 @@ function DateSelectTable() {
             });
     }, []);
 
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = dates.slice(indexOfFirstItem, indexOfLastItem);
-
-    const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(dates.length / itemsPerPage); i++) {
-        pageNumbers.push(i);
-    }
-
-    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        setCurrentPage(Number(event.currentTarget.id));
-    };
-
-    const renderPageNumbers = pageNumbers.map((number) => {
+    if (isLoading)
+    {
+        return <LoadingScreen loadingText="Loading dates..." />;
+    } else {
         return (
-            <li key={number} className="inline-block">
-                <a
-                    href="#"
-                    id={number.toString()}
-                    onClick={handleClick}
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${currentPage === number
-                            ? "bg-blue-500 text-white"
-                            : "text-gray-700 hover:bg-gray-200"
-                        }`}
-                >
-                    {number}
-                </a>
-            </li>
-        );
-    });
-
-    const totalPages = Math.ceil(dates.length / itemsPerPage);
-
-    return (
-        <div>
-            <table className="table-auto w-full">
-                <tbody className="bg-white dark:bg-slate-800">
-                    {currentItems.map((date) => (
-                        <tr key={date.id}>
-                            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                                {date.source}
-                            </td>
-                            <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                {date.date}
-                            </td>
-                            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                {date.clipCount}
-                            </td>
-                            <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                {date.outageStatus === '' ? (
-                                    <FontAwesomeIcon icon={faCheckCircle} title="No outages" />
-                                ) : (
-                                    <FontAwesomeIcon icon={faExclamationTriangle} title={date.outageStatus} />
-                                )}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <div className="flex justify-between items-center mt-4">
-                <div className="text-sm text-gray-700 dark:text-gray-400">
-                    Showing {indexOfFirstItem + 1} to {indexOfLastItem} of {dates.length} entries
-                </div>
-                <ul className="flex">
-                    <li className="mr-2">
-                        <span className="pl-4 text-sm text-gray-700 dark:text-gray-400">
-                            Page {currentPage} of {totalPages}
-                        </span>
-                    </li>
-                    {renderPageNumbers}
-                </ul>
+            <div>
+                <table className="table-auto w-full">
+                    <tbody className="bg-white dark:bg-slate-800">
+                        {currentItems.map((date) => (
+                            <tr ref={tableRowRef} key={date.id}>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                                    {date.source}
+                                </td>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
+                                    {date.date}
+                                </td>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
+                                    {date.clipCount}
+                                </td>
+                                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
+                                    {date.outageStatus === '' ? (
+                                        <FontAwesomeIcon icon={faCheckCircle} title="No outages" />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faExclamationTriangle} title={date.outageStatus} />
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                <Pagination items={dates} tableRowRef={tableRowRef} setCurrentItems={setCurrentItems} />
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default DateSelectTable;

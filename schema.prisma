@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model api {
+  api_key        String   @id @unique(map: "api_key") @db.VarChar(64)
+  api_secret     String   @db.VarChar(64)
+  last_heartbeat DateTime @default(now()) @db.Timestamp(0)
+  description    String?  @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model clips {
+  id   Int       @id @default(autoincrement()) @db.UnsignedInt
+  name String    @unique(map: "name-unique") @db.VarChar(255)
+  url  String    @db.VarChar(255)
+  dt   DateTime? @db.DateTime(0)
+}
+
+model outages {
+  id          Int      @id @unique(map: "id") @default(autoincrement())
+  api_key     String   @db.VarChar(64)
+  description String?  @db.VarChar(255)
+  timestamp   DateTime @default(now()) @db.Timestamp(0)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model users {
+  id           Int      @id @default(autoincrement()) @db.UnsignedInt
+  email        String   @db.VarChar(255)
+  time_created DateTime @default(now()) @map("time-created") @db.Timestamp(0)
+  name         String   @db.VarChar(255)
+  password     String   @db.VarChar(255)
+  TLI          Int?     @db.UnsignedInt
+  sid          String?  @db.VarChar(200)
+  substatus    String?  @db.VarChar(200)
+}
