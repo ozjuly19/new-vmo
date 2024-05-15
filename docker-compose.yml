@@ -1,0 +1,17 @@
+
+services:
+  backend:
+    build: .
+    ports:
+      - "4848:22"
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: passwordTime
+      MYSQL_DATABASE: vmo-scanner
+    ports:
+      - "3306:3306"
