@@ -1,12 +1,7 @@
 "use client"
 import React from "react";
 import { useState, useEffect } from "react";
-
-interface PaginationProps {
-    setCurrentItems: React.Dispatch<React.SetStateAction<any[]>>;
-    items: any[];
-    tableRowRef: React.RefObject<HTMLTableRowElement>;
-}
+import { PaginationProps } from "../lib/types";
 
 function Pagination({ items, setCurrentItems, tableRowRef }: PaginationProps) {
     const [currentPage, setCurrentPage] = useState(1);

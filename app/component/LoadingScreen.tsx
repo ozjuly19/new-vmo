@@ -1,8 +1,5 @@
 import React from "react";
-
-interface LoadingScreenProps {
-  loadingText: string;
-}
+import { LoadingScreenProps } from "../lib/types";
 
 function LoadingScreen({ loadingText }: LoadingScreenProps) {
   return (
