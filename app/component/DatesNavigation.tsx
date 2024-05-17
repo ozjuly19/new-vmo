@@ -6,7 +6,7 @@ import DateSelectTable from './DateSelectTable'
 
 const audioFile = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 
-function NavigationFooter() {
+function DatesNavigation() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleButtonClick = () => {
@@ -26,4 +26,4 @@ function NavigationFooter() {
   );
 }
 
-export default NavigationFooter;
+export default DatesNavigation;
