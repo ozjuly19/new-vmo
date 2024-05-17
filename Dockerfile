@@ -2,7 +2,8 @@ FROM alpine:3.19
 
 ENTRYPOINT ["/entrypoint.sh"]
 EXPOSE 22
-COPY ssh-setup/entrypoint.sh /entrypoint.sh
+
+COPY --chmod=755 --chown=root:root ssh-setup/entrypoint.sh /entrypoint.sh
 
 RUN apk add --no-cache openssh \
   && sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config
