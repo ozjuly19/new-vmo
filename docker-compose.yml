@@ -1,4 +1,3 @@
-
 services:
   backend:
     build: .
@@ -7,11 +6,26 @@ services:
       - "3000:3000"
     depends_on:
       - db
+    networks:
+      - backend-network
+
   db:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: passwordTime
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: vmo-scanner
     ports:
       - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
