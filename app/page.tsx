@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import DatesNavigation from './component/DatesNavigation'; // Corrected import
 import LoadingScreen from './component/LoadingScreen';
 import ClipsPage from './component/ClipsPage';
+import NavigationHeader from './component/NavigationHeader';
 
 function Page() {
   const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +20,7 @@ function Page() {
 
   return (
     <main className='overflow-hidden'>
+      <NavigationHeader />
       <ClipsPage />
       <DatesNavigation />
     </main>
