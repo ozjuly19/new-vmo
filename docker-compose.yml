@@ -1,6 +1,7 @@
 services:
   backend:
     build: .
+    image: vmo-backend
     ports:
       - "4848:22"
       - "3000:3000"
