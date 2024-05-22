@@ -5,70 +5,71 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import LoadingScreen from "./LoadingScreen";
 import Pagination from "./Pagination";
+import { ClipDate } from "../lib/types";
 
-interface Date {
-    id: number; // The DB side id for that row
-    source: string; // The source of the clip group i.e. "Sanders County Sheriff's Office"
-    date: string; // Returns ISO format date YYYY-MM-DD
-    clipCount: number; // Number of clips in the group
-    outageStatus: string; // If set this means there was an outage detected on the date
+async function fetchClipDates() {
+    const response = await fetch("/api/dates");
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (!data || !data["clipDatesJson"]) {
+        throw new Error("Unexpected data structure");
+    }
+    return data["clipDatesJson"];
 }
 
 function DateSelectTable() {
-    const [dates, setDates] = useState<Date[]>([]);
+    const [dates, setDates] = useState<ClipDate[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentItems, setCurrentItems] = useState<any[]>([]);
-
+    const [currentItems, setCurrentItems] = useState<ClipDate[]>([]);
     const tableRowRef = useRef<HTMLTableRowElement>(null);
 
     useEffect(() => {
-        // Fetch dates from the database and update the state
-        fetch("/api/dates")
-            .then((response) => response.json())
-            .then((data) => {
-                const dates: Date[] = data["datesJson"].map((date: any) => ({
-                    id: date.id,
-                    source: date.source,
-                    date: new Date(date.date).toLocaleDateString("en-US", {
+        fetchClipDates()
+            .then((clipDatesJson) => {
+                const dates: ClipDate[] = clipDatesJson.map((clipDate: any) => ({
+                    id: clipDate.id,
+                    source: clipDate.source,
+                    date: new Date(clipDate.date).toLocaleDateString("en-US", {
                         month: "2-digit",
                         day: "2-digit",
                         year: "2-digit",
                     }),
-                    clipCount: date.clipCount + " Clips",
-                    outageStatus: date.outageStatus,
+                    clipCount: clipDate.clipCount + " Clips",
+                    outageStatus: clipDate.outageStatus,
                 }));
                 setDates(dates);
                 setIsLoading(false);
-
-                // Fix pagination by adding at least 
-                setCurrentItems(dates.slice(0, 1));
+            })
+            .catch((error) => {
+                console.error("Fetch error: ", error);
             });
     }, []);
 
-    if (isLoading)
-    {
+    if (isLoading) {
         return <LoadingScreen loadingText="Loading dates..." />;
     } else {
         return (
             <div>
                 <table className="table-auto w-full">
                     <tbody className="bg-white dark:bg-slate-800">
-                        {currentItems.map((date) => (
-                            <tr ref={tableRowRef} key={date.id}>
+                        {currentItems.map(({ id, source, date, clipCount, outageStatus }) => (
+                            <tr ref={tableRowRef} key={id}>
                                 <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                                    {date.source}
+                                    {source}
                                 </td>
                                 <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                    {date.date}
+                                    {date}
                                 </td>
                                 <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                    {date.clipCount}
+                                    {clipCount}
                                 </td>
                                 <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                    {date.outageStatus === '' ? (
+                                    {outageStatus === '' ? (
                                         <FontAwesomeIcon icon={faCheckCircle} title="No outages" />
                                     ) : (
-                                        <FontAwesomeIcon icon={faExclamationTriangle} title={date.outageStatus} />
+                                        <FontAwesomeIcon icon={faExclamationTriangle} title={outageStatus} />
                                     )}
                                 </td>
                             </tr>
