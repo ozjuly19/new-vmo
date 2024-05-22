@@ -3,12 +3,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
+import { AudioPlayerProps } from '../lib/types';
 
-interface Props {
-    url: string;
-}
-
-function AudioPlayer(props: Props) {
+function AudioPlayer(props: AudioPlayerProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);

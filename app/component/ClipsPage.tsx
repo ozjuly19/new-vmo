@@ -3,13 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import LoadingScreen from "./LoadingScreen";
 import Pagination from "./Pagination";
-
-interface Clip {
-    id: number;     // The DB side id for that row
-    source: string; // The source of the clip i.e. "Sanders County Sheriff's Office"
-    date: string;   // Returns ISO format date YYYY-MM-DD
-    time: string;   // Time the clip was uploaded
-}
+import { Clip } from '../lib/types';
 
 function ClipsPage() {
     const [clips, setClips] = useState<Clip[]>([]);
