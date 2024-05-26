@@ -1,7 +1,7 @@
 import prisma from '../../lib/prisma';
+import { Clip } from '../../lib/types';
 
-export async function Clips() {
-
+export async function RouteLogic(): Promise<Clip[]> {
     const clips = await prisma.clips.findMany({
         where: {
             dt: {

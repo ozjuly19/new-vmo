@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { Clips } from './clips';
+import { RouteLogic } from './routelogic';
 
 export async function GET(request: Request) {
-    return NextResponse.json({ clipsJson: await Clips });
+    return NextResponse.json({ clipsJson: await RouteLogic });
 }
 //     {
 //         id: 1,

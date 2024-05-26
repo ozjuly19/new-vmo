@@ -1,4 +1,4 @@
-import { Dates } from '../../../app/api/dates/dates';
+import { RouteLogic } from '../../../app/api/dates/routelogic';
 
 jest.mock('../../../app/lib/prisma.tsx', () => ({
     clips: {
@@ -31,7 +31,7 @@ jest.mock('../../../app/lib/prisma.tsx', () => ({
 describe('GET /api/dates', () => {
     it('should respond with a formatted list of dates', async () => {
 
-        const response = await Dates();
+        const response = await RouteLogic();
 
         expect(response[0]).toEqual({
             clipCount: 1,

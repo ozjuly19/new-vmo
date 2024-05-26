@@ -1,4 +1,4 @@
-import { Clips } from '../../../app/api/clips/clips'; // route logic
+import { RouteLogic } from '../../../app/api/clips/routelogic'; // route logic
 
 jest.mock('../../../app/lib/prisma.tsx', () => ({
     clips: {
@@ -16,15 +16,15 @@ jest.mock('../../../app/lib/prisma.tsx', () => ({
 
 describe('GET /api/clips', () => {
     it('should respond with a formatted list of clips', async () => {
+      // Call the route logic function
+      const response = await RouteLogic();
 
-        const response = await Clips();
-
-        expect(response[0]).toEqual({
-            date: "1/4/2023",
-            id: "1",
-            name: "Test Clip1",
-            source: "Sanders County Sheriff's Office",
-            time: "5:00 AM",
-            url: "http://test.com",});
-    });
+      expect(response[0]).toEqual({
+          date: "1/4/2023",
+          id: "1",
+          name: "Test Clip1",
+          source: "Sanders County Sheriff's Office",
+          time: "5:00 AM",
+          url: "http://test.com",});
+  });
 });

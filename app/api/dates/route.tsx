@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { Dates } from './dates';
+import { RouteLogic } from './routelogic';
 
 export async function GET(request: Request) {
   try {
-    const formattedDates = await Dates();
+    const formattedDates = await RouteLogic();
     return NextResponse.json({ clipDatesJson: formattedDates });
   } catch (error) {
     console.error("Fetch error: ", error);

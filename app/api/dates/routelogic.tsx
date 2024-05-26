@@ -1,7 +1,7 @@
 import prisma from '../../lib/prisma';
 import { ClipDate } from '../../lib/types';
 
-export async function Dates(): Promise<ClipDate[]> {
+export async function RouteLogic(): Promise<ClipDate[]> {
   const clips = await prisma.clips.findMany();
 
   const groupedClips = clips.reduce((acc: { [key: string]: number }, clip) => {
