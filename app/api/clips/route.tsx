@@ -1,8 +1,22 @@
 import { NextResponse } from 'next/server';
-import { RouteLogic } from './routelogic';
 
+import { RouteLogic } from './routelogic';
+import { CommonRouteCall } from '../apiutils';
+
+// Define an async function to handle GET requests
 export async function GET(request: Request) {
-    return NextResponse.json({ clipsJson: await RouteLogic });
+    // Call the CommonRouteCall function with RouteLogic as an argument and await its result
+    const response = await CommonRouteCall(RouteLogic);
+
+    // Check if the response is an instance of NextResponse
+    if (response instanceof NextResponse) {
+        // If it is, return the response as is because it's already a NextResponse (error most likely)
+        return response;
+    }
+
+    // If the response is not an instance of NextResponse, it's a JSON object
+    // Wrap it in a NextResponse.json call and return it
+    return NextResponse.json({ clipsJson: response });
 }
 //     {
 //         id: 1,

@@ -1,14 +1,22 @@
 import { NextResponse } from 'next/server';
 import { RouteLogic } from './routelogic';
+import { CommonRouteCall } from '../apiutils';
 
+// Define an async function to handle GET requests
 export async function GET(request: Request) {
-  try {
-    const formattedDates = await RouteLogic();
-    return NextResponse.json({ clipDatesJson: formattedDates });
-  } catch (error) {
-    console.error("Fetch error: ", error);
-    return NextResponse.error(); // Remove the argument from the function call
+  // Call the CommonRouteCall function with RouteLogic as an argument and await its result
+  const response = await CommonRouteCall(RouteLogic);
+
+  // Check if the response is an instance of NextResponse
+  if (response instanceof NextResponse) {
+    // If the response is an instance of NextResponse, return it as is
+    // This means that an error occurred in the RouteLogic function and a NextResponse error was returned
+    return response;
   }
+
+  // If the response is not an instance of NextResponse, it's a JSON object
+  // Wrap it in a NextResponse.json call and return it
+  return NextResponse.json({ clipDatesJson: response });
 }
 /*
 const datesJson = [ // Simulate a database query
