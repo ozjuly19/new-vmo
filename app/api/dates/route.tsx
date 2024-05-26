@@ -1,33 +1,9 @@
 import { NextResponse } from 'next/server';
-import prisma from '../../lib/prisma';
-import { ClipDate } from '../../lib/types';
-
-async function fetchAndFormatClips(): Promise<ClipDate[]> {
-  const clips = await prisma.clips.findMany();
-
-  const groupedClips = clips.reduce((acc: { [key: string]: number }, clip) => {
-    const date = clip.dt ? clip.dt.toISOString().split('T')[0] : null;
-    if (date) {
-      if (!acc[date]) {
-        acc[date] = 0;
-      }
-      acc[date]++;
-    }
-    return acc;
-  }, {});
-
-  return Object.entries(groupedClips).map(([date, count], index) => ({
-    id: index + 1,
-    source: "SCSO",
-    date,
-    clipCount: count,
-    outageStatus: "",
-  }));
-}
+import { Dates } from './dates';
 
 export async function GET(request: Request) {
   try {
-    const formattedDates = await fetchAndFormatClips();
+    const formattedDates = await Dates();
     return NextResponse.json({ clipDatesJson: formattedDates });
   } catch (error) {
     console.error("Fetch error: ", error);
