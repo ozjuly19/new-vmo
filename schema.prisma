@@ -42,3 +42,12 @@ model users {
   sid          String?  @db.VarChar(200)
   substatus    String?  @db.VarChar(200)
 }
+
+model files {
+    id         Int      @id @default(autoincrement())
+    clipId     Int?
+    filename   String
+    file_path  String
+    file_size  Int
+    created_at DateTime @default(now())
+}
