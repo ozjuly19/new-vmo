@@ -11,15 +11,21 @@ services:
       - backend-network
 
   db:
-    image: mysql:5.7
+    image: postgres
     environment:
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: vmo-scanner
+      POSTGRES_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      POSTGRES_USER: vmo-scanner
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - db-data:/var/lib/mysql
+      - pgdata:/var/lib/postgresql/data 
+    networks:
+      - backend-network
+
+  dbman:
+    image: adminer
+    ports:
+      - "8080:8080"
     networks:
       - backend-network
 
@@ -28,5 +34,5 @@ networks:
     driver: bridge
 
 volumes:
-  db-data:
+  pgdata:
     driver: local
