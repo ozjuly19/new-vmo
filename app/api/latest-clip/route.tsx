@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
     // If the response is not an instance of NextResponse, it's a JSON object
     // Wrap it in a NextResponse.json call and return it
-    return NextResponse.json({ clipsJson: response });
+    return NextResponse.json(response);
 }
 //     {
 //         id: 1,

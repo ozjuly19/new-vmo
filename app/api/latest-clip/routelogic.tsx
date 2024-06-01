@@ -11,7 +11,11 @@ export async function RouteLogic() {
 
     // Check if a clip was found
     if (!newestClip || !newestClip.dt) {
-        throw new Error('No clips found');
+        // throw new Error('No clips found');
+        return {
+            date: null,
+            error: "No clips found"
+        };
     }
 
     // Create a date object for the clip
