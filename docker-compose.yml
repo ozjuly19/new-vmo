@@ -1,38 +1,7 @@
+# Example docker-compose file if you were gonna use docker-compose to run the app
 services:
-  backend:
+  frontend:
     build: .
-    image: vmo-backend
+    image: vmo-frontend
     ports:
-      - "4848:22"
       - "3000:3000"
-    depends_on:
-      - db
-    networks:
-      - backend-network
-
-  db:
-    image: postgres
-    environment:
-      POSTGRES_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      POSTGRES_USER: vmo-scanner
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data 
-    networks:
-      - backend-network
-
-  dbman:
-    image: adminer
-    ports:
-      - "8080:8080"
-    networks:
-      - backend-network
-
-networks:
-  backend-network:
-    driver: bridge
-
-volumes:
-  pgdata:
-    driver: local
