@@ -9,7 +9,11 @@ import { Clip } from '../lib/types';
 // Function to fetch clips from the API
 async function fetchClips() {
     // Fetching data from the API
-    const response = await fetch('/api/clips');
+    const response = await fetch(`${process.env.API_HOST}/api/clips`, {
+        headers: {
+            "api-key": process.env.API_KEY ?? "set-api-key-in-dotenv", // Mostly just a development thing will be removed in production
+        }
+    });
     // Parsing the response to JSON
     const data = await response.json();
     // Mapping the data to the Clip type

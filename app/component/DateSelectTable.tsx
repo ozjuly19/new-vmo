@@ -11,7 +11,11 @@ import { ClipDate } from "../lib/types";
 // Function to fetch clip dates from the API
 async function fetchClipDates() {
     // Fetching data from the API
-    const response = await fetch("/api/dates");
+    const response = await fetch(`${process.env.API_HOST}/api/dates`, {
+        headers: {
+            "api-key": process.env.API_KEY ?? "set-api-key-in-dotenv", // Mostly just a development thing will be removed in production
+        }
+    });
     // Checking if the response is OK
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
